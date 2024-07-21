@@ -1,0 +1,40 @@
+{
+  "name": "tenonquiz",
+  "version": "0.0.1",
+  "bin": {
+    "tenonquiz": "bin/main.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "STACK_ENVIRONMENT=dev jest",
+    "bootstrap-dev": "STACK_ENVIRONMENT=dev cdk bootstrap --profile tenonquiz-admin",
+    "diff-dev": "STACK_ENVIRONMENT=dev cdk diff --profile tenonquiz-admin",
+    "synth-dev": "STACK_ENVIRONMENT=dev cdk synth --profile tenonquiz-admin",
+    "sam-dev": "sam local start-api -t ./cdk.out/DevMainStack.template.json --profile tenonquiz-admin",
+    "deploy-dev": "STACK_ENVIRONMENT=dev cdk deploy --profile tenonquiz-admin",
+    "destroy-dev": "STACK_ENVIRONMENT=dev cdk destroy --profile tenonquiz-admin",
+    "bootstrap-dev-deploy": "STACK_ENVIRONMENT=dev cdk bootstrap aws://DEPLOY_ACCOUNT_ID/us-east-1 --profile tenonquiz-deploy --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess --trust BUILD_ACCOUNT_ID --trust-for-lookup BUILD_ACCOUNT_ID",
+    "bootstrap-prod": "STACK_ENVIRONMENT=prod cdk bootstrap --profile tenonquiz-admin",
+    "diff-prod": "STACK_ENVIRONMENT=prod cdk diff --profile tenonquiz-admin",
+    "synth-prod": "STACK_ENVIRONMENT=prod cdk synth --profile tenonquiz-admin",
+    "deploy-prod": "STACK_ENVIRONMENT=prod cdk deploy --profile tenonquiz-admin",
+    "destroy-prod": "STACK_ENVIRONMENT=prod cdk destroy --profile tenonquiz-admin",
+    "sam-prod": "sam local start-api -t ./cdk.out/DevMainStack.template.json --profile tenonquiz-admin",
+    "bootstrap-prod-deploy": "STACK_ENVIRONMENT=prod cdk bootstrap aws://DEPLOY_ACCOUNT_ID/us-east-1 --profile tenonquiz-deploy --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess --trust BUILD_ACCOUNT_ID --trust-for-lookup BUILD_ACCOUNT_ID"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "20.14.9",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5",
+    "aws-cdk": "2.149.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.5.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.149.0",
+    "constructs": "^10.0.0",
+    "source-map-support": "^0.5.21"
+  }
+}
