@@ -44,10 +44,9 @@ export class MainStack extends cdk.Stack {
         'ssm:GetParameters',
         'ssm:GetParametersByPath'
       ],
-      resources: [`arn:aws:ssm:${props?.env?.region}:${props?.env?.account}:parameter/*`]
+      resources: [`arn:aws:ssm:${regionDeploy}:${accountIdDeploy}:parameter/*`]
     });
-    // pipeline.pipeline.role.addToPrincipalPolicy(parameterStorePolicy); // TODO: borrar esto si lo otro funciona
-    pipeline.pipeline.artifactBucket.addToResourcePolicy(parameterStorePolicy);// TODO: probar si nada funciona
+    pipeline.pipeline.artifactBucket.addToResourcePolicy(parameterStorePolicy);
 
     pipeline.pipeline.artifactBucket.grantRead(new iam.AccountPrincipal(accountIdDeploy));
   }
