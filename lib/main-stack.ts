@@ -23,10 +23,18 @@ export class MainStack extends cdk.Stack {
           repositoryBranch,
           {
             connectionArn: repositoryArn,
-          }
+          },
         ),
         commands: ["npm ci", "npm run build", "npx cdk synth"],
       }),
+      synthCodeBuildDefaults: {
+        rolePolicy: [
+          new iam.PolicyStatement({
+            actions: [ 'sts:AssumeRole' ],
+            resources: [ cdkToolkitLookupRoleArn(this) ],
+          }),
+        ],
+      },
     });
 
     pipeline.addStage(
@@ -37,17 +45,15 @@ export class MainStack extends cdk.Stack {
 
     pipeline.buildPipeline();
 
-    // TODO: Improve role grant for get parameter store
-    const parameterStorePolicy = new iam.PolicyStatement({
-      actions: [
-        "ssm:GetParameter",
-        "ssm:GetParameters",
-        "ssm:GetParametersByPath",
-      ],
-      resources: [`arn:aws:ssm:${regionDeploy}:${accountIdDeploy}:parameter/*`]
-    });
-    pipeline.pipeline.addToRolePolicy(parameterStorePolicy);
-
     pipeline.pipeline.artifactBucket.grantRead(new iam.AccountPrincipal(accountIdDeploy));
+  }
+}
+
+function cdkToolkitLookupRoleArn(stack: cdk.Stack): string {
+  const synthesizer: any = stack.synthesizer
+  if ('lookupRoleArn' in synthesizer) {
+    return synthesizer.lookupRoleArn
+  } else {
+    throw new Error(`No lookupRoleArn on ${synthesizer}`)
   }
 }
