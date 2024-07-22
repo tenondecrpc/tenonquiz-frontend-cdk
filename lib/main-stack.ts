@@ -38,6 +38,7 @@ export class MainStack extends cdk.Stack {
     pipeline.buildPipeline();
 
     // TODO: Improve role grant for get parameter store
+    const pipelineRole = pipeline.pipeline.role as iam.Role;
     const parameterStorePolicy = new iam.PolicyStatement({
       actions: [
         'ssm:GetParameter',
@@ -46,7 +47,7 @@ export class MainStack extends cdk.Stack {
       ],
       resources: [`arn:aws:ssm:${regionDeploy}:${accountIdDeploy}:parameter/*`]
     });
-    pipeline.pipeline.artifactBucket.addToResourcePolicy(parameterStorePolicy);
+    pipelineRole.addToPolicy(parameterStorePolicy);
 
     pipeline.pipeline.artifactBucket.grantRead(new iam.AccountPrincipal(accountIdDeploy));
   }
