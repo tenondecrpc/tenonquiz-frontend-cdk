@@ -29,6 +29,12 @@ export class MainStack extends cdk.Stack {
       }),
     });
 
+    pipeline.addStage(
+      new WebStage(this, "WebStage", {
+        env: { account: accountIdDeploy, region: regionDeploy },
+      })
+    );
+
     // TODO: Improve role grant for get parameter store
     const pipelineRole = pipeline.pipeline.role as iam.Role;
     const parameterStorePolicy = new iam.PolicyStatement({
@@ -40,12 +46,6 @@ export class MainStack extends cdk.Stack {
       resources: [`arn:aws:ssm:${props?.env?.region}:${props?.env?.account}:parameter/*`]
     });
     pipelineRole.addToPolicy(parameterStorePolicy);
-
-    pipeline.addStage(
-      new WebStage(this, "WebStage", {
-        env: { account: accountIdDeploy, region: regionDeploy },
-      })
-    );
 
     pipeline.buildPipeline();
 
