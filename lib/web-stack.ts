@@ -10,11 +10,11 @@ export class WebStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StageProps) {
     super(scope, id, props);
 
-    const repositoryArn = ssm.StringParameter.valueForStringParameter(this, '/my/application/connection/repository/arn');
-    const repositoryOwner = ssm.StringParameter.valueForStringParameter(this, '/my/application/connection/repository/owner');
-    const repositoryName = ssm.StringParameter.valueForStringParameter(this, '/my/application/connection/repository/frontend/name');
-    const repositoryBranch = ssm.StringParameter.valueForStringParameter(this, '/my/application/connection/repository/frontend/branch');
-    const webBucketName = ssm.StringParameter.valueForStringParameter(this, '/my/application/web/bucket/name');
+    const repositoryArn = ssm.StringParameter.valueFromLookup(this, '/my/application/connection/repository/arn');
+    const repositoryOwner = ssm.StringParameter.valueFromLookup(this, '/my/application/connection/repository/owner');
+    const repositoryName = ssm.StringParameter.valueFromLookup(this, '/my/application/connection/repository/frontend/name');
+    const repositoryBranch = ssm.StringParameter.valueFromLookup(this, '/my/application/connection/repository/frontend/branch');
+    const webBucketName = ssm.StringParameter.valueFromLookup(this, '/my/application/web/bucket/name');
 
     const bucket = new s3.Bucket(this, webBucketName, {
       publicReadAccess: true,

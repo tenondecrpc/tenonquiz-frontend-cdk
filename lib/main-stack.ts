@@ -9,11 +9,12 @@ export class MainStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const repositoryArn = ssm.StringParameter.valueForStringParameter(this, '/my/application/connection/repository/arn');
-    const repositoryName = ssm.StringParameter.valueForStringParameter(this, '/my/application/connection/repository/infra/web/name');
-    const repositoryBranch = ssm.StringParameter.valueForStringParameter(this, '/my/application/connection/repository/infra/web/branch');
-    const accountIdDeploy = ssm.StringParameter.valueForStringParameter(this, '/account/id/deploy');
-    const regionDeploy = ssm.StringParameter.valueForStringParameter(this, '/account/region/deploy');
+    // cambiar a publico para la organización
+    const repositoryArn = ssm.StringParameter.valueFromLookup(this, '/my/application/connection/repository/arn');
+    const repositoryName = ssm.StringParameter.valueFromLookup(this, '/my/application/connection/repository/infra/web/name');
+    const repositoryBranch = ssm.StringParameter.valueFromLookup(this, '/my/application/connection/repository/infra/web/branch');
+    const accountIdDeploy = ssm.StringParameter.valueFromLookup(this, '/account/id/deploy');
+    const regionDeploy = ssm.StringParameter.valueFromLookup(this, '/account/region/deploy');
 
     const pipeline = new pipelines.CodePipeline(this, "MainPipeline", {
       crossAccountKeys: true,
