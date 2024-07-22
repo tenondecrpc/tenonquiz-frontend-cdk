@@ -44,7 +44,7 @@ export class MainStack extends cdk.Stack {
         "ssm:GetParameters",
         "ssm:GetParametersByPath",
       ],
-      resources: [`arn:aws:ssm:${accountIdDeploy}:${accountIdDeploy}:parameter/*`]
+      resources: [`arn:aws:ssm:${regionDeploy}:${accountIdDeploy}:parameter/*`]
     });
     pipeline.pipeline.addToRolePolicy(parameterStorePolicy);
 
