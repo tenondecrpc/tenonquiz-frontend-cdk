@@ -31,7 +31,7 @@ export class MainStack extends cdk.Stack {
         rolePolicy: [
           new iam.PolicyStatement({
             actions: [ 'sts:AssumeRole' ],
-            resources: [ cdkToolkitLookupRoleArn(this) ],
+            resources: [ '*'],
           }),
         ],
       },
@@ -46,14 +46,5 @@ export class MainStack extends cdk.Stack {
     pipeline.buildPipeline();
 
     pipeline.pipeline.artifactBucket.grantRead(new iam.AccountPrincipal(accountIdDeploy));
-  }
-}
-
-function cdkToolkitLookupRoleArn(stack: cdk.Stack): string {
-  const synthesizer: any = stack.synthesizer
-  if ('lookupRoleArn' in synthesizer) {
-    return synthesizer.lookupRoleArn
-  } else {
-    throw new Error(`No lookupRoleArn on ${synthesizer}`)
   }
 }
