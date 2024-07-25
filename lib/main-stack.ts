@@ -15,11 +15,6 @@ export class MainStack extends cdk.Stack {
     const accountIdDeploy = ssm.StringParameter.valueFromLookup(this, '/account/id/deploy');
     const regionDeploy = ssm.StringParameter.valueFromLookup(this, '/account/region/deploy');
 
-    const deploymentRole = new iam.Role(this, "DeploymentRole", {
-      roleName: "WebAppDeploymentRole",
-      assumedBy: new iam.AccountPrincipal(props?.env?.account),
-    });
-
     const pipeline = new pipelines.CodePipeline(this, "Web", {
       crossAccountKeys: true,
       synth: new pipelines.ShellStep("Synth", {
@@ -36,9 +31,7 @@ export class MainStack extends cdk.Stack {
         rolePolicy: [
           new iam.PolicyStatement({
             actions: ['sts:AssumeRole'],
-            // resources: ['*'], // TODO: this works
-            // resources: [`arn:aws:iam::${accountIdDeploy}:role/*`],
-            resources: [`arn:aws:iam::${accountIdDeploy}:role/WebAppDeploymentRole`],
+            resources: ['*'],
           }),
         ],
       },
@@ -49,20 +42,6 @@ export class MainStack extends cdk.Stack {
         env: { account: accountIdDeploy, region: regionDeploy },
       })
     );
-
-    // TODO: Added security control
-    // const topic = new sns.Topic(this, 'SecurityChangesTopic');
-    // topic.addSubscription(new subscriptions.EmailSubscription('test@email.com'));
-
-    // const stage = new MyApplicationStage(this, 'MyApplication');
-    // pipeline.addStage(stage, {
-    //   pre: [
-    //     new pipelines.ConfirmPermissionsBroadening('Check', {
-    //       stage,
-    //       notificationTopic: topic,
-    //     }),
-    //   ],
-    // });
 
     pipeline.buildPipeline();
 
