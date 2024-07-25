@@ -32,16 +32,32 @@ export class MainStack extends cdk.Stack {
           new iam.PolicyStatement({
             actions: [ 'sts:AssumeRole' ],
             resources: [ '*'],
+            // resources: [`arn:aws:iam::${accountIdDeploy}:role/*`]
           }),
         ],
       },
     });
+
 
     pipeline.addStage(
       new WebStage(this, "WebStage", {
         env: { account: accountIdDeploy, region: regionDeploy },
       })
     );
+
+    // TODO: Added security control
+    // const topic = new sns.Topic(this, 'SecurityChangesTopic');
+    // topic.addSubscription(new subscriptions.EmailSubscription('test@email.com'));
+    
+    // const stage = new MyApplicationStage(this, 'MyApplication');
+    // pipeline.addStage(stage, {
+    //   pre: [
+    //     new pipelines.ConfirmPermissionsBroadening('Check', {
+    //       stage,
+    //       notificationTopic: topic,
+    //     }),
+    //   ],
+    // });
 
     pipeline.buildPipeline();
 

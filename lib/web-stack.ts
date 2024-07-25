@@ -60,11 +60,11 @@ export class WebStack extends cdk.Stack {
         },
         artifacts: {
           files: ["**/*"],
-          "base-directory": "build",
+          "base-directory": "dist",
         },
       }),
       environment: {
-        buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
+        buildImage: codebuild.LinuxBuildImage.STANDARD_6_0, // TODO: Upgrade to version STANDARD_7_0
         privileged: true,
         computeType: codebuild.ComputeType.MEDIUM,
       },
