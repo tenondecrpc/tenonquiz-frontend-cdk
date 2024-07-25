@@ -30,9 +30,9 @@ export class MainStack extends cdk.Stack {
       synthCodeBuildDefaults: {
         rolePolicy: [
           new iam.PolicyStatement({
-            actions: [ 'sts:AssumeRole' ],
-            resources: [ '*'],
-            // resources: [`arn:aws:iam::${accountIdDeploy}:role/*`]
+            actions: ['sts:AssumeRole'],
+            // resources: ['*'],
+            resources: [`arn:aws:iam::${accountIdDeploy}:role/*`]
           }),
         ],
       },
@@ -48,7 +48,7 @@ export class MainStack extends cdk.Stack {
     // TODO: Added security control
     // const topic = new sns.Topic(this, 'SecurityChangesTopic');
     // topic.addSubscription(new subscriptions.EmailSubscription('test@email.com'));
-    
+
     // const stage = new MyApplicationStage(this, 'MyApplication');
     // pipeline.addStage(stage, {
     //   pre: [
