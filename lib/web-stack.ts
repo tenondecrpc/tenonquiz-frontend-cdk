@@ -28,7 +28,7 @@ export class WebStack extends cdk.Stack {
     });
 
     const webpPipeline = new codepipeline.Pipeline(this, "WebPipeline", {
-      pipelineName: `react-app-pipeline`,
+      pipelineName: `web-app`,
     });
 
     const sourceOutput = new codepipeline.Artifact();
@@ -64,7 +64,7 @@ export class WebStack extends cdk.Stack {
         },
       }),
       environment: {
-        buildImage: codebuild.LinuxBuildImage.STANDARD_6_0, // TODO: Upgrade to version STANDARD_7_0
+        buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
         privileged: true,
         computeType: codebuild.ComputeType.MEDIUM,
       },
