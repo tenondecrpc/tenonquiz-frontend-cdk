@@ -15,6 +15,11 @@ export class MainStack extends cdk.Stack {
     const accountIdDeploy = ssm.StringParameter.valueFromLookup(this, '/account/id/deploy');
     const regionDeploy = ssm.StringParameter.valueFromLookup(this, '/account/region/deploy');
 
+    const deploymentRole = new iam.Role(this, "DeploymentRole", {
+      roleName: "WebAppDeploymentRole",
+      assumedBy: new iam.AccountPrincipal(props?.env?.account),
+    });
+
     const pipeline = new pipelines.CodePipeline(this, "Web", {
       crossAccountKeys: true,
       synth: new pipelines.ShellStep("Synth", {
@@ -31,13 +36,13 @@ export class MainStack extends cdk.Stack {
         rolePolicy: [
           new iam.PolicyStatement({
             actions: ['sts:AssumeRole'],
-            // resources: ['*'],
-            resources: [`arn:aws:iam::${accountIdDeploy}:role/*`]
+            // resources: ['*'], // TODO: this works
+            // resources: [`arn:aws:iam::${accountIdDeploy}:role/*`],
+            resources: [`arn:aws:iam::${accountIdDeploy}:role/WebAppDeploymentRole`],
           }),
         ],
       },
     });
-
 
     pipeline.addStage(
       new WebStage(this, "WebStage", {
